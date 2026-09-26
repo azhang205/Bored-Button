@@ -3,504 +3,633 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>I'm Bored</title>
 
 <style>
-* {
-    box-sizing: border-box;
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
 }
 
-html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
+body{
+    background:#fff;
+    transition:background 1.2s ease;
 }
 
-body {
-    background: linear-gradient(
-        to bottom,
-        #78c9ff,
-        #b9e6ff 55%,
-        #eaf8ff
-    );
+/* =========================
+   START SCREEN
+========================= */
 
-    transition:
-        background 2s ease,
-        filter 1s ease;
+#start{
+    position:fixed;
+    inset:0;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
 }
 
-/* -------------------------
+#bored{
+    width:210px;
+    height:210px;
+    border-radius:50%;
+    border:0;
+    background:#e53935;
+    color:white;
+    font-size:27px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 12px 30px rgba(0,0,0,.16);
+    transition:.15s;
+}
+
+#bored:hover{
+    transform:scale(1.06);
+    box-shadow:0 16px 38px rgba(0,0,0,.2);
+}
+
+#bored:active{
+    transform:scale(.94);
+}
+
+/* =========================
+   MAIN WORLD
+========================= */
+
+#world{
+    position:fixed;
+    inset:0;
+    display:none;
+}
+
+#message{
+    position:absolute;
+    top:25px;
+    left:50%;
+    transform:translateX(-50%);
+    color:white;
+    font-size:22px;
+    font-weight:bold;
+    text-shadow:0 2px 8px rgba(0,0,0,.35);
+    z-index:30;
+    text-align:center;
+}
+
+#again{
+    position:absolute;
+    bottom:25px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:100;
+    border:0;
+    border-radius:30px;
+    padding:13px 25px;
+    background:rgba(255,255,255,.85);
+    color:#333;
+    font-weight:bold;
+    cursor:pointer;
+    backdrop-filter:blur(8px);
+}
+
+#counter{
+    position:absolute;
+    bottom:25px;
+    right:25px;
+    z-index:100;
+    color:white;
+    text-shadow:0 2px 5px #000;
+}
+
+/* =========================
    SKY
-------------------------- */
+========================= */
 
-#sky {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
+#sky{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    background:linear-gradient(#75c9ff,#c8edff);
+    transition:1.5s;
 }
 
-.sun {
-    position: absolute;
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    background: #fff3a3;
-    box-shadow: 0 0 70px #fff1a8;
-    top: 10%;
-    right: 12%;
-    transition: 2s;
+.sun{
+    position:absolute;
+    width:110px;
+    height:110px;
+    border-radius:50%;
+    background:#fff3a0;
+    box-shadow:0 0 70px #fff3a0;
+    top:11%;
+    right:12%;
 }
 
-.moon {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #f4f4ff;
-    box-shadow: 0 0 40px white;
-    top: 12%;
-    right: 15%;
-    display: none;
+.moon{
+    position:absolute;
+    width:85px;
+    height:85px;
+    border-radius:50%;
+    background:#f4f4f4;
+    box-shadow:0 0 40px white;
+    top:12%;
+    right:15%;
+    display:none;
 }
 
-.cloud {
-    position: absolute;
-    width: 160px;
-    height: 50px;
-    background: white;
-    border-radius: 50px;
-    opacity: .75;
-    filter: blur(.3px);
+.cloud{
+    position:absolute;
+    width:190px;
+    height:55px;
+    background:white;
+    border-radius:50px;
+    opacity:.75;
 }
 
-.cloud::before,
-.cloud::after {
-    content: "";
-    position: absolute;
-    background: white;
-    border-radius: 50%;
+.cloud:before,
+.cloud:after{
+    content:"";
+    position:absolute;
+    background:white;
+    border-radius:50%;
 }
 
-.cloud::before {
-    width: 70px;
-    height: 70px;
-    left: 25px;
-    bottom: 10px;
+.cloud:before{
+    width:80px;
+    height:80px;
+    left:25px;
+    bottom:10px;
 }
 
-.cloud::after {
-    width: 90px;
-    height: 90px;
-    right: 20px;
-    bottom: 5px;
+.cloud:after{
+    width:95px;
+    height:95px;
+    right:25px;
+    bottom:3px;
 }
 
-.cloud1 {
-    top: 18%;
-    left: -200px;
-    animation: drift 70s linear infinite;
+.c1{
+    top:20%;
+    left:-250px;
+    animation:cloudmove 70s linear infinite;
 }
 
-.cloud2 {
-    top: 32%;
-    left: -250px;
-    transform: scale(.7);
-    animation: drift 95s linear infinite;
-    animation-delay: -30s;
+.c2{
+    top:36%;
+    left:-300px;
+    transform:scale(.65);
+    animation:cloudmove 100s linear infinite;
 }
 
-@keyframes drift {
-    from {
-        transform: translateX(0);
-    }
-
-    to {
-        transform: translateX(calc(100vw + 500px));
-    }
+@keyframes cloudmove{
+    to{left:110%}
 }
 
-/* -------------------------
-   GROUND
-------------------------- */
-
-#ground {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 25%;
-    background:
-        repeating-linear-gradient(
-            80deg,
-            #7fcf75 0px,
-            #7fcf75 3px,
-            #74c56b 4px,
-            #74c56b 7px
-        );
-    transition: 1s;
+#ground{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:25%;
+    background:#72bd67;
 }
 
-.grass {
-    position: absolute;
-    bottom: 20%;
-    width: 100%;
-    height: 20px;
+/* =========================
+   STARS
+========================= */
+
+.star{
+    position:absolute;
+    width:3px;
+    height:3px;
+    background:white;
+    border-radius:50%;
+    animation:twinkle 2s infinite alternate;
 }
 
-/* -------------------------
-   MAIN UI
-------------------------- */
-
-#interface {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
+@keyframes twinkle{
+    from{opacity:.25}
+    to{opacity:1}
 }
 
-#boredButton {
-    width: 260px;
-    height: 260px;
-    border-radius: 50%;
-    border: none;
-
-    background:
-        radial-gradient(circle at 35% 30%, #ffffff, #d7f2ff 35%, #63b8ef);
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.2),
-        inset 0 -15px 25px rgba(0,0,0,.12),
-        inset 0 10px 20px rgba(255,255,255,.8);
-
-    font-size: 32px;
-    font-weight: bold;
-    color: #28648c;
-
-    cursor: pointer;
-
-    transition:
-        transform .15s,
-        box-shadow .15s;
-}
-
-#boredButton:hover {
-    transform: scale(1.05);
-}
-
-#boredButton:active {
-    transform: scale(.93);
-}
-
-#message {
-    position: absolute;
-    top: 7%;
-    width: 100%;
-    text-align: center;
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    text-shadow: 0 2px 5px rgba(0,0,0,.25);
-    padding: 0 20px;
-}
-
-#counter {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-
-    padding: 10px 15px;
-    border-radius: 12px;
-
-    background: rgba(255,255,255,.5);
-    backdrop-filter: blur(10px);
-
-    color: #24516d;
-    font-size: 14px;
-}
-
-/* -------------------------
-   DOOR
-------------------------- */
-
-#door {
-    position: fixed;
-    left: 50%;
-    bottom: 24%;
-    transform: translateX(-50%);
-
-    width: 150px;
-    height: 240px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #372b35,
-            #634956,
-            #342732
-        );
-
-    border: 8px solid #241e25;
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.35);
-
-    display: none;
-
-    cursor: pointer;
-    z-index: 8;
-}
-
-#door::after {
-    content: "🚪";
-    position: absolute;
-    inset: 0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-size: 65px;
-}
-
-#doorLabel {
-    position: absolute;
-    top: -45px;
-    width: 100%;
-
-    text-align: center;
-    color: white;
-    font-weight: bold;
-}
-
-/* -------------------------
+/* =========================
    HALLWAY
-------------------------- */
+========================= */
 
-#hallway {
-    position: fixed;
-    inset: 0;
-    display: none;
-    overflow: hidden;
+#hallway{
+    position:absolute;
+    inset:0;
+    display:none;
+    overflow:hidden;
+    background:#18171b;
+}
 
+/* ceiling */
+
+.hall-ceiling{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:38%;
     background:
         linear-gradient(
             90deg,
-            #14141c 0%,
-            #272733 45%,
-            #14141c 100%
+            #242229,
+            #35323b 50%,
+            #242229
         );
-
-    z-index: 30;
+    clip-path:polygon(0 0,100% 0,72% 100%,28% 100%);
 }
 
-.wall {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 28%;
+/* left/right walls */
 
+.hall-left,
+.hall-right{
+    position:absolute;
+    top:0;
+    width:50%;
+    height:100%;
+}
+
+.hall-left{
+    left:0;
+    background:linear-gradient(
+        90deg,
+        #25232a,
+        #4b4650
+    );
+    clip-path:polygon(0 0,100% 0,50% 100%,0 100%);
+}
+
+.hall-right{
+    right:0;
+    background:linear-gradient(
+        90deg,
+        #4b4650,
+        #25232a
+    );
+    clip-path:polygon(0 0,100% 0,100% 100%,50% 100%);
+}
+
+/* floor */
+
+.hall-floor{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:48%;
     background:
         repeating-linear-gradient(
             90deg,
-            #24232e 0px,
-            #24232e 40px,
-            #1b1a23 41px,
-            #1b1a23 80px
+            #29272d 0,
+            #29272d 95px,
+            #333038 96px,
+            #333038 100px
         );
-}
-
-.wall.left {
-    left: 0;
-    transform: skewY(-8deg);
-    transform-origin: left;
-}
-
-.wall.right {
-    right: 0;
-    transform: skewY(8deg);
-    transform-origin: right;
-}
-
-.floor {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 38%;
-
-    background:
-        repeating-linear-gradient(
-            90deg,
-            #18171e 0px,
-            #18171e 100px,
-            #24232b 101px,
-            #24232b 105px
-        );
-
-    clip-path: polygon(
-        25% 0,
-        75% 0,
+    clip-path:polygon(
+        0 100%,
         100% 100%,
-        0 100%
+        70% 0,
+        30% 0
     );
 }
 
-.hallLight {
-    position: absolute;
-    width: 60px;
-    height: 120px;
+/* floor center reflection */
 
-    background: #fff2b3;
-    box-shadow: 0 0 30px #ffe88a;
-
-    top: 15%;
-
-    animation: flicker 3s infinite;
+.hall-floor:after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:0;
+    width:2px;
+    height:100%;
+    background:rgba(255,255,255,.12);
 }
 
-.hallLight:nth-child(1) {
-    left: 35%;
+/* ceiling lights */
+
+.light{
+    position:absolute;
+    width:90px;
+    height:16px;
+    background:#fff8cf;
+    box-shadow:
+        0 0 25px #fff1a1,
+        0 0 70px rgba(255,240,150,.4);
+    transform:translateX(-50%);
 }
 
-.hallLight:nth-child(2) {
-    right: 35%;
-    animation-delay: 1s;
+.l1{left:50%;top:14%}
+.l2{left:42%;top:30%;transform:scale(.75) translateX(-50%)}
+.l3{left:58%;top:30%;transform:scale(.75) translateX(-50%)}
+
+/* =========================
+   ACTUAL DOORS
+========================= */
+
+.door{
+    position:absolute;
+    width:120px;
+    height:215px;
+    background:linear-gradient(
+        90deg,
+        #392f39,
+        #594553,
+        #302832
+    );
+    border:7px solid #201c22;
+    box-shadow:
+        0 15px 25px rgba(0,0,0,.45),
+        inset 0 0 20px rgba(0,0,0,.35);
+    cursor:pointer;
+    transition:.2s;
 }
 
-@keyframes flicker {
-    0%, 95%, 100% { opacity: 1; }
-    96% { opacity: .2; }
-    97% { opacity: 1; }
+.door:hover{
+    filter:brightness(1.3);
+    transform:translateY(-4px);
 }
 
-.hallDoor {
-    position: absolute;
+/* panels */
 
-    width: 90px;
-    height: 150px;
-
-    background: #6c596d;
-    border: 5px solid #302532;
-
-    cursor: pointer;
-
-    transition: transform .2s;
+.door:before{
+    content:"";
+    position:absolute;
+    left:16px;
+    right:16px;
+    top:18px;
+    bottom:18px;
+    border:3px solid rgba(255,255,255,.1);
+    box-shadow:
+        inset 0 0 0 3px rgba(0,0,0,.2);
 }
 
-.hallDoor:hover {
-    transform: scale(1.08);
+/* handle */
+
+.door:after{
+    content:"";
+    position:absolute;
+    right:14px;
+    top:52%;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#d5bd7b;
+    box-shadow:0 0 5px #d5bd7b;
 }
 
-.hallDoor:nth-of-type(1) {
-    left: 30%;
-    top: 38%;
+/* left doors */
+
+.door-left-1{
+    left:17%;
+    top:35%;
+    transform:perspective(500px) rotateY(15deg);
 }
 
-.hallDoor:nth-of-type(2) {
-    right: 30%;
-    top: 42%;
+.door-left-2{
+    left:5%;
+    top:26%;
+    transform:
+        scale(.72)
+        perspective(500px)
+        rotateY(22deg);
 }
 
-#exitHall {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+/* right doors */
 
-    padding: 10px 15px;
-
-    border: none;
-    border-radius: 10px;
-
-    background: rgba(255,255,255,.15);
-    color: white;
-
-    cursor: pointer;
+.door-right-1{
+    right:17%;
+    top:35%;
+    transform:perspective(500px) rotateY(-15deg);
 }
 
-/* -------------------------
-   RANDOM EVENTS
-------------------------- */
-
-.event {
-    position: fixed;
-    inset: 0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    z-index: 50;
-
-    pointer-events: none;
+.door-right-2{
+    right:5%;
+    top:26%;
+    transform:
+        scale(.72)
+        perspective(500px)
+        rotateY(-22deg);
 }
 
-.eventText {
-    font-size: 50px;
-    font-weight: bold;
-    color: white;
-
-    text-shadow:
-        0 0 10px black,
-        0 0 30px black;
-
-    animation: eventAppear 2s forwards;
+.door-label{
+    position:absolute;
+    bottom:-35px;
+    left:50%;
+    transform:translateX(-50%);
+    white-space:nowrap;
+    color:#ddd;
+    font-size:13px;
 }
 
-@keyframes eventAppear {
-    0% {
-        transform: scale(.2) rotate(-20deg);
-        opacity: 0;
+/* end of hallway */
+
+.hall-end{
+    position:absolute;
+    left:50%;
+    top:36%;
+    transform:translateX(-50%);
+    width:130px;
+    height:205px;
+    background:#17151a;
+    border:8px solid #29242c;
+    box-shadow:0 0 40px rgba(0,0,0,.8);
+}
+
+.end-light{
+    position:absolute;
+    left:50%;
+    top:32%;
+    transform:translateX(-50%);
+    width:45px;
+    height:90px;
+    background:#fff6bd;
+    box-shadow:0 0 70px #fff1a0;
+}
+
+/* =========================
+   OTHER WORLDS
+========================= */
+
+.world-scene{
+    position:absolute;
+    inset:0;
+    display:none;
+}
+
+/* ocean */
+
+#ocean{
+    background:
+        linear-gradient(#8edbff 0%,#d7f5ff 42%,#0879a8 43%,#034e70 100%);
+}
+
+.ocean-wave{
+    position:absolute;
+    width:130%;
+    height:90px;
+    left:-15%;
+    border-radius:50%;
+    border-top:4px solid rgba(255,255,255,.65);
+    animation:wave 4s linear infinite;
+}
+
+.w1{top:55%}
+.w2{top:67%;animation-delay:-2s}
+.w3{top:80%;animation-delay:-1s}
+
+@keyframes wave{
+    from{transform:translateX(-5%)}
+    to{transform:translateX(5%)}
+}
+
+/* forest */
+
+#forest{
+    background:linear-gradient(#8bcff0 0%,#d7f1d0 48%,#467b3f 49%,#183d1b);
+}
+
+.tree{
+    position:absolute;
+    bottom:22%;
+    width:0;
+    height:0;
+    border-left:70px solid transparent;
+    border-right:70px solid transparent;
+    border-bottom:180px solid #214f27;
+}
+
+.tree:after{
+    content:"";
+    position:absolute;
+    left:-8px;
+    top:165px;
+    width:16px;
+    height:70px;
+    background:#513b28;
+}
+
+/* space */
+
+#space{
+    background:
+        radial-gradient(circle at center,#18245c,#070a19 65%,#02030b);
+}
+
+.planet{
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#c87554,#6d3049);
+    box-shadow:0 0 70px rgba(180,100,120,.4);
+    left:15%;
+    top:28%;
+}
+
+.space-star{
+    position:absolute;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:white;
+}
+
+/* city */
+
+#city{
+    background:
+        linear-gradient(#17243e 0%,#30476b 55%,#111 56%);
+}
+
+.building{
+    position:absolute;
+    bottom:0;
+    width:90px;
+    background:#17191e;
+}
+
+.window{
+    width:8px;
+    height:8px;
+    background:#f5d878;
+    position:absolute;
+}
+
+/* weird world */
+
+#weird{
+    background:
+        conic-gradient(
+            from 90deg,
+            #ff004c,
+            #7c00ff,
+            #00d9ff,
+            #00ff6a,
+            #ffff00,
+            #ff004c
+        );
+    animation:weirdspin 10s linear infinite;
+}
+
+@keyframes weirdspin{
+    to{filter:hue-rotate(360deg)}
+}
+
+.weird-text{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    color:white;
+    font-size:70px;
+    font-weight:bold;
+    text-shadow:0 0 20px #000;
+}
+
+/* =========================
+   SECRET EVENTS
+========================= */
+
+#event{
+    position:absolute;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+    background:rgba(0,0,0,.15);
+    pointer-events:none;
+}
+
+#eventText{
+    font-size:60px;
+    color:white;
+    font-weight:bold;
+    text-shadow:0 5px 20px #000;
+    animation:event .8s ease;
+}
+
+@keyframes event{
+    from{transform:scale(.1) rotate(-20deg);opacity:0}
+    50%{transform:scale(1.2);opacity:1}
+    to{transform:scale(1);opacity:1}
+}
+
+@media(max-width:700px){
+    .door{
+        width:80px;
+        height:150px;
     }
 
-    30% {
-        transform: scale(1.2);
-        opacity: 1;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 0;
-    }
-}
-
-/* -------------------------
-   STARS
-------------------------- */
-
-.star {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: white;
-
-    animation: twinkle 2s infinite alternate;
-}
-
-@keyframes twinkle {
-    from { opacity: .2; }
-    to { opacity: 1; }
-}
-
-/* -------------------------
-   MOBILE
-------------------------- */
-
-@media (max-width: 600px) {
-
-    #boredButton {
-        width: 200px;
-        height: 200px;
-        font-size: 25px;
-    }
-
-    #message {
-        font-size: 18px;
+    #bored{
+        width:180px;
+        height:180px;
     }
 }
 </style>
@@ -508,537 +637,524 @@ body {
 
 <body>
 
-<div id="sky">
+<!-- ==================================
+     START
+================================== -->
 
-    <div class="sun"></div>
-    <div class="moon"></div>
-
-    <div class="cloud cloud1"></div>
-    <div class="cloud cloud2"></div>
-
+<div id="start">
+    <button id="bored">I'M BORED</button>
 </div>
 
-<div id="ground"></div>
 
-<div id="interface">
+<!-- ==================================
+     WORLD
+================================== -->
 
-    <div id="message">
-        You look bored.
+<div id="world">
+
+    <div id="message"></div>
+
+    <!-- SKY -->
+
+    <div id="sky" class="world-scene">
+        <div class="sun"></div>
+        <div class="moon"></div>
+        <div class="cloud c1"></div>
+        <div class="cloud c2"></div>
+        <div id="skyStars"></div>
+        <div id="ground"></div>
     </div>
 
-    <button id="boredButton">
-        I'M BORED
-    </button>
 
-</div>
+    <!-- HALLWAY -->
 
-<div id="door">
-    <div id="doorLabel">You found a door.</div>
-</div>
+    <div id="hallway" class="world-scene">
 
-<div id="counter">
-    Clicks: 0
-</div>
+        <div class="hall-ceiling"></div>
+
+        <div class="hall-left"></div>
+        <div class="hall-right"></div>
+
+        <div class="hall-floor"></div>
+
+        <div class="light l1"></div>
+        <div class="light l2"></div>
+        <div class="light l3"></div>
+
+        <div class="hall-end"></div>
+        <div class="end-light"></div>
+
+        <div class="door door-left-1"
+             onclick="door(1)">
+            <span class="door-label">103</span>
+        </div>
+
+        <div class="door door-left-2"
+             onclick="door(2)">
+            <span class="door-label">???</span>
+        </div>
+
+        <div class="door door-right-1"
+             onclick="door(3)">
+            <span class="door-label">204</span>
+        </div>
+
+        <div class="door door-right-2"
+             onclick="door(4)">
+            <span class="door-label">∞</span>
+        </div>
+
+    </div>
 
 
-<!-- INFINITE HALLWAY -->
+    <!-- OCEAN -->
 
-<div id="hallway">
+    <div id="ocean" class="world-scene">
+        <div class="ocean-wave w1"></div>
+        <div class="ocean-wave w2"></div>
+        <div class="ocean-wave w3"></div>
+    </div>
 
-    <div class="wall left"></div>
-    <div class="wall right"></div>
 
-    <div class="floor"></div>
+    <!-- FOREST -->
 
-    <div class="hallLight"></div>
-    <div class="hallLight"></div>
+    <div id="forest" class="world-scene">
 
-    <div
-        class="hallDoor"
-        onclick="hallDoor()"
-    ></div>
+        <div class="tree" style="left:10%"></div>
+        <div class="tree" style="left:28%;transform:scale(.75)"></div>
+        <div class="tree" style="left:48%;transform:scale(1.2)"></div>
+        <div class="tree" style="left:70%;transform:scale(.8)"></div>
+        <div class="tree" style="left:87%;transform:scale(.65)"></div>
 
-    <div
-        class="hallDoor"
-        onclick="hallDoor()"
-    ></div>
+    </div>
 
-    <button id="exitHall">
-        ← Leave hallway
-    </button>
+
+    <!-- SPACE -->
+
+    <div id="space" class="world-scene">
+
+        <div class="planet"></div>
+
+        <div id="spaceStars"></div>
+
+    </div>
+
+
+    <!-- CITY -->
+
+    <div id="city" class="world-scene"></div>
+
+
+    <!-- WEIRD -->
+
+    <div id="weird" class="world-scene">
+        <div class="weird-text">WHY?</div>
+    </div>
+
+
+    <!-- EVENT -->
+
+    <div id="event">
+        <div id="eventText"></div>
+    </div>
+
+
+    <div id="counter"></div>
+
+    <button id="again">I'M BORED AGAIN</button>
 
 </div>
 
 
 <script>
 
+/* ==================================
+   VARIABLES
+================================== */
+
 let clicks = 0;
 
-const button = document.getElementById("boredButton");
+const start = document.getElementById("start");
+const world = document.getElementById("world");
 const message = document.getElementById("message");
 const counter = document.getElementById("counter");
-const door = document.getElementById("door");
-const hallway = document.getElementById("hallway");
 
-const messages = [
+const scenes = document.querySelectorAll(".world-scene");
 
-    "That didn't help.",
-    "Still bored?",
-    "Interesting.",
-    "You shouldn't have clicked that.",
-    "Something changed.",
-    "Look around.",
-    "Was that always there?",
-    "You found something.",
-    "Keep clicking.",
-    "The website is getting concerned.",
-    "I don't know what you expected.",
-    "Congratulations. You clicked a button.",
-    "This is probably fine.",
-    "Have you tried clicking again?",
-    "The universe noticed that.",
-    "You are going deeper.",
-    "Something is watching.",
-    "Wrong button.",
-    "There is no button.",
-    "Actually, there is."
-];
 
-button.addEventListener("click", bored);
+/* ==================================
+   START
+================================== */
 
-function bored() {
+document.getElementById("bored").onclick = () => {
+
+    start.style.display = "none";
+    world.style.display = "block";
+
+    bored();
+
+};
+
+
+/* ==================================
+   MAIN RANDOMIZER
+================================== */
+
+document.getElementById("again").onclick = bored;
+
+function bored(){
 
     clicks++;
 
-    counter.textContent = "Clicks: " + clicks;
-
-    message.textContent =
-        messages[Math.floor(Math.random() * messages.length)];
-
-    let event = Math.floor(Math.random() * 12);
-
-    if (event === 0) {
-        skyNight();
-    }
-
-    else if (event === 1) {
-        skyStorm();
-    }
-
-    else if (event === 2) {
-        createStars();
-    }
-
-    else if (event === 3) {
-        spawnDoor();
-    }
-
-    else if (event === 4) {
-        earthquake();
-    }
-
-    else if (event === 5) {
-        moonMode();
-    }
-
-    else if (event === 6) {
-        rainbow();
-    }
-
-    else if (event === 7) {
-        matrixMode();
-    }
-
-    else if (event === 8) {
-        giantText();
-    }
-
-    else if (event === 9) {
-        hallway.style.display = "block";
-        message.textContent = "There is a hallway now.";
-    }
-
-    else {
-        randomEvent();
-    }
-
-}
-
-
-/* -------------------------
-   TIME-BASED SKY
-------------------------- */
-
-function updateSky() {
-
-    let hour = new Date().getHours();
-
-    const sun = document.querySelector(".sun");
-    const moon = document.querySelector(".moon");
-
-    if (hour >= 7 && hour < 18) {
-
-        document.body.style.background =
-            "linear-gradient(to bottom,#78c9ff,#b9e6ff,#eaf8ff)";
-
-        sun.style.display = "block";
-        moon.style.display = "none";
-
-    }
-
-    else {
-
-        document.body.style.background =
-            "linear-gradient(to bottom,#101936,#27345d,#52637c)";
-
-        sun.style.display = "none";
-        moon.style.display = "block";
-
-        createStars();
-
-    }
-
-}
-
-updateSky();
-
-
-/* -------------------------
-   NIGHT
-------------------------- */
-
-function skyNight() {
-
-    document.body.style.background =
-        "linear-gradient(to bottom,#090d24,#19244d,#34436c)";
-
-    document.querySelector(".sun").style.display = "none";
-    document.querySelector(".moon").style.display = "block";
-
-    createStars();
-
-    message.textContent = "Night has arrived.";
-}
-
-
-/* -------------------------
-   STORM
-------------------------- */
-
-function skyStorm() {
-
-    document.body.style.background =
-        "linear-gradient(to bottom,#31343c,#555861,#25272c)";
-
-    message.textContent = "A storm is coming.";
-
-    for (let i = 0; i < 15; i++) {
-
-        setTimeout(() => {
-
-            document.body.style.filter =
-                "brightness(2)";
-
-            setTimeout(() => {
-                document.body.style.filter =
-                    "brightness(1)";
-            }, 100);
-
-        }, i * 300);
-
-    }
-
-}
-
-
-/* -------------------------
-   STARS
-------------------------- */
-
-function createStars() {
-
-    for (let i = 0; i < 80; i++) {
-
-        let star = document.createElement("div");
-
-        star.className = "star";
-
-        star.style.left =
-            Math.random() * 100 + "%";
-
-        star.style.top =
-            Math.random() * 70 + "%";
-
-        star.style.animationDelay =
-            Math.random() * 2 + "s";
-
-        document.getElementById("sky")
-            .appendChild(star);
-
-    }
-
-}
-
-
-/* -------------------------
-   DOOR
-------------------------- */
-
-function spawnDoor() {
-
-    door.style.display = "block";
-
-    message.textContent =
-        "There is definitely a door now.";
-
-    setTimeout(() => {
-
-        if (Math.random() < .5) {
-            door.style.display = "none";
-        }
-
-    }, 6000);
-
-}
-
-door.addEventListener("click", () => {
-
-    hallway.style.display = "block";
-
-});
-
-
-/* -------------------------
-   HALLWAY
-------------------------- */
-
-function hallDoor() {
-
-    let result =
-        Math.floor(Math.random() * 5);
-
-    if (result === 0) {
-
-        hallway.style.background =
-            "linear-gradient(90deg,#210000,#650000,#210000)";
-
-        alert("This door goes somewhere warm.");
-
-    }
-
-    else if (result === 1) {
-
-        hallway.style.background =
-            "linear-gradient(90deg,#001b21,#00606c,#001b21)";
-
-        alert("You hear water.");
-
-    }
-
-    else if (result === 2) {
-
-        hallway.style.background =
-            "linear-gradient(90deg,#180021,#5e0073,#180021)";
-
-        alert("There are stars behind this door.");
-
-    }
-
-    else if (result === 3) {
-
-        hallway.style.background =
-            "linear-gradient(90deg,#202000,#777700,#202000)";
-
-        alert("Everything is yellow.");
-
-    }
-
-    else {
-
-        hallway.style.background =
-            "linear-gradient(90deg,#111,#555,#111)";
-
-        alert("It's another hallway.");
-
-    }
-
-}
-
-
-/* -------------------------
-   EXIT
-------------------------- */
-
-document.getElementById("exitHall")
-    .onclick = function() {
-
-        hallway.style.display = "none";
-
-    };
-
-
-/* -------------------------
-   EARTHQUAKE
-------------------------- */
-
-function earthquake() {
-
-    document.body.animate(
-        [
-            { transform: "translate(0,0)" },
-            { transform: "translate(10px,-5px)" },
-            { transform: "translate(-10px,5px)" },
-            { transform: "translate(8px,2px)" },
-            { transform: "translate(0,0)" }
-        ],
-        {
-            duration: 500
-        }
+    counter.textContent =
+        "Clicks: " + clicks;
+
+    scenes.forEach(s =>
+        s.style.display = "none"
     );
 
+    let choice =
+        Math.floor(Math.random()*9);
+
+    if(choice === 0) sky();
+    if(choice === 1) hallway();
+    if(choice === 2) ocean();
+    if(choice === 3) forest();
+    if(choice === 4) space();
+    if(choice === 5) city();
+    if(choice === 6) weird();
+    if(choice === 7) surprise();
+    if(choice === 8) sky(true);
+
 }
 
 
-/* -------------------------
-   MOON MODE
-------------------------- */
+/* ==================================
+   SKY
+================================== */
 
-function moonMode() {
+function sky(night=false){
 
-    skyNight();
+    const s =
+        document.getElementById("sky");
+
+    s.style.display = "block";
+
+    const sun =
+        document.querySelector(".sun");
+
+    const moon =
+        document.querySelector(".moon");
+
+    if(night){
+
+        s.style.background =
+            "linear-gradient(#08102e,#182d59,#40516b)";
+
+        sun.style.display="none";
+        moon.style.display="block";
+
+        makeStars(
+            document.getElementById("skyStars"),
+            100
+        );
+
+        message.textContent =
+            "The world is asleep.";
+
+    }else{
+
+        s.style.background =
+            "linear-gradient(#72c8ff,#d9f4ff)";
+
+        sun.style.display="block";
+        moon.style.display="none";
+
+        message.textContent =
+            "Nothing is wrong with this sky.";
+
+    }
+
+}
+
+
+/* ==================================
+   HALLWAY
+================================== */
+
+function hallway(){
+
+    document.getElementById("hallway")
+        .style.display="block";
 
     message.textContent =
-        "The moon is watching.";
+        "Which door?";
+}
+
+
+/* ==================================
+   DOORS
+================================== */
+
+function door(number){
+
+    if(number === 1){
+        forest();
+        message.textContent =
+            "Door 103 leads to a forest.";
+    }
+
+    else if(number === 2){
+        space();
+        message.textContent =
+            "You opened the wrong door.";
+    }
+
+    else if(number === 3){
+        ocean();
+        message.textContent =
+            "There is water behind this door.";
+    }
+
+    else{
+        hallway();
+
+        message.textContent =
+            "The hallway continues.";
+
+        /* subtly regenerate the door labels */
+
+        document.querySelectorAll(".door-label")
+            .forEach(x=>{
+                x.textContent =
+                    Math.floor(Math.random()*999);
+            });
+    }
 
 }
 
 
-/* -------------------------
-   RAINBOW
-------------------------- */
+/* ==================================
+   OCEAN
+================================== */
 
-function rainbow() {
+function ocean(){
 
-    document.body.style.background =
-        "linear-gradient(135deg,red,orange,yellow,green,cyan,blue,purple)";
+    document.getElementById("ocean")
+        .style.display="block";
 
     message.textContent =
-        "🌈 RAINBOW MODE 🌈";
+        "You are standing above an ocean.";
 
 }
 
 
-/* -------------------------
-   MATRIX
-------------------------- */
+/* ==================================
+   FOREST
+================================== */
 
-function matrixMode() {
+function forest(){
 
-    document.body.style.background =
-        "#001100";
-
-    message.style.color =
-        "#00ff55";
+    document.getElementById("forest")
+        .style.display="block";
 
     message.textContent =
-        "THE WEBSITE HAS BECOME SENTIENT.";
-
-    setTimeout(() => {
-
-        message.style.color = "white";
-
-    }, 4000);
+        "There wasn't a forest here before.";
 
 }
 
 
-/* -------------------------
-   GIANT TEXT
-------------------------- */
+/* ==================================
+   SPACE
+================================== */
 
-function giantText() {
+function space(){
 
-    let text = document.createElement("div");
+    document.getElementById("space")
+        .style.display="block";
 
-    text.className = "event";
+    makeStars(
+        document.getElementById("spaceStars"),
+        150
+    );
 
-    text.innerHTML =
-        '<div class="eventText">WHY ARE YOU STILL HERE?</div>';
-
-    document.body.appendChild(text);
-
-    setTimeout(() => {
-        text.remove();
-    }, 2000);
+    message.textContent =
+        "You are no longer on Earth.";
 
 }
 
 
-/* -------------------------
-   RANDOM EVENT
-------------------------- */
+/* ==================================
+   CITY
+================================== */
 
-function randomEvent() {
+function city(){
 
-    let phrases = [
+    const c =
+        document.getElementById("city");
 
-        "🌎",
+    c.style.display="block";
+
+    c.innerHTML="";
+
+    for(let i=0;i<14;i++){
+
+        let b =
+            document.createElement("div");
+
+        b.className="building";
+
+        b.style.height =
+            (120+Math.random()*400)+"px";
+
+        b.style.left =
+            (i*8)+"%";
+
+        for(let j=0;j<12;j++){
+
+            let w =
+                document.createElement("div");
+
+            w.className="window";
+
+            w.style.left =
+                (10+Math.random()*70)+"%";
+
+            w.style.top =
+                (10+j*25)+"px";
+
+            b.appendChild(w);
+
+        }
+
+        c.appendChild(b);
+
+    }
+
+    message.textContent =
+        "An empty city.";
+}
+
+
+/* ==================================
+   WEIRD
+================================== */
+
+function weird(){
+
+    document.getElementById("weird")
+        .style.display="block";
+
+    message.textContent =
+        "Something went wrong.";
+
+}
+
+
+/* ==================================
+   STARS
+================================== */
+
+function makeStars(container,count){
+
+    container.innerHTML="";
+
+    for(let i=0;i<count;i++){
+
+        let star =
+            document.createElement("div");
+
+        star.className =
+            container.id === "spaceStars"
+            ? "space-star"
+            : "star";
+
+        star.style.left =
+            Math.random()*100+"%";
+
+        star.style.top =
+            Math.random()*80+"%";
+
+        if(container.id === "spaceStars"){
+
+            star.style.opacity =
+                Math.random();
+
+        }
+
+        container.appendChild(star);
+
+    }
+
+}
+
+
+/* ==================================
+   RANDOM SURPRISES
+================================== */
+
+function surprise(){
+
+    const event =
+        document.getElementById("event");
+
+    const text =
+        document.getElementById("eventText");
+
+    const things = [
+
+        "🐟",
         "404",
-        "BOOM",
-        "hello",
-        "???",
-        "🚪",
-        "🌙",
-        "🌌",
+        "HELLO",
         "RUN",
-        "nice.",
-        "wow",
-        "okay",
+        "???",
+        "🌙",
+        "🛸",
+        "BOOM",
+        "YOU FOUND NOTHING",
+        "NICE",
+        "WHY ARE YOU HERE?",
+        "∞",
+        "🦆",
+        "THE DUCK KNOWS"
 
     ];
 
-    let text = document.createElement("div");
+    text.textContent =
+        things[
+            Math.floor(Math.random()*things.length)
+        ];
 
-    text.className = "event";
+    event.style.display="flex";
 
-    text.innerHTML =
-        '<div class="eventText">' +
-        phrases[Math.floor(Math.random() * phrases.length)] +
-        '</div>';
-
-    document.body.appendChild(text);
-
-    setTimeout(() => {
-        text.remove();
-    }, 2000);
+    setTimeout(()=>{
+        event.style.display="none";
+    },1400);
 
 }
 
 
-/* -------------------------
-   RARE SECRET
-------------------------- */
+/* ==================================
+   RARE EVENTS
+================================== */
 
-setInterval(() => {
+setInterval(()=>{
 
-    if (clicks > 5 && Math.random() < .08) {
+    if(clicks >= 5 && Math.random()<.05){
 
-        message.textContent =
-            "You found the secret event.";
-
-        document.body.style.transform =
-            "rotate(180deg)";
-
-        setTimeout(() => {
-
-            document.body.style.transform =
-                "rotate(0deg)";
-
-        }, 1000);
+        document.body.animate(
+            [
+                {transform:"translateX(0)"},
+                {transform:"translateX(8px)"},
+                {transform:"translateX(-8px)"},
+                {transform:"translateX(0)"}
+            ],
+            {duration:400}
+        );
 
     }
 
-}, 3000);
+},3000);
 
 </script>
 

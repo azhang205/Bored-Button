@@ -1,0 +1,1047 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I'm Bored</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(
+        to bottom,
+        #78c9ff,
+        #b9e6ff 55%,
+        #eaf8ff
+    );
+
+    transition:
+        background 2s ease,
+        filter 1s ease;
+}
+
+/* -------------------------
+   SKY
+------------------------- */
+
+#sky {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.sun {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #fff3a3;
+    box-shadow: 0 0 70px #fff1a8;
+    top: 10%;
+    right: 12%;
+    transition: 2s;
+}
+
+.moon {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #f4f4ff;
+    box-shadow: 0 0 40px white;
+    top: 12%;
+    right: 15%;
+    display: none;
+}
+
+.cloud {
+    position: absolute;
+    width: 160px;
+    height: 50px;
+    background: white;
+    border-radius: 50px;
+    opacity: .75;
+    filter: blur(.3px);
+}
+
+.cloud::before,
+.cloud::after {
+    content: "";
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+}
+
+.cloud::before {
+    width: 70px;
+    height: 70px;
+    left: 25px;
+    bottom: 10px;
+}
+
+.cloud::after {
+    width: 90px;
+    height: 90px;
+    right: 20px;
+    bottom: 5px;
+}
+
+.cloud1 {
+    top: 18%;
+    left: -200px;
+    animation: drift 70s linear infinite;
+}
+
+.cloud2 {
+    top: 32%;
+    left: -250px;
+    transform: scale(.7);
+    animation: drift 95s linear infinite;
+    animation-delay: -30s;
+}
+
+@keyframes drift {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(100vw + 500px));
+    }
+}
+
+/* -------------------------
+   GROUND
+------------------------- */
+
+#ground {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    background:
+        repeating-linear-gradient(
+            80deg,
+            #7fcf75 0px,
+            #7fcf75 3px,
+            #74c56b 4px,
+            #74c56b 7px
+        );
+    transition: 1s;
+}
+
+.grass {
+    position: absolute;
+    bottom: 20%;
+    width: 100%;
+    height: 20px;
+}
+
+/* -------------------------
+   MAIN UI
+------------------------- */
+
+#interface {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+#boredButton {
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    border: none;
+
+    background:
+        radial-gradient(circle at 35% 30%, #ffffff, #d7f2ff 35%, #63b8ef);
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.2),
+        inset 0 -15px 25px rgba(0,0,0,.12),
+        inset 0 10px 20px rgba(255,255,255,.8);
+
+    font-size: 32px;
+    font-weight: bold;
+    color: #28648c;
+
+    cursor: pointer;
+
+    transition:
+        transform .15s,
+        box-shadow .15s;
+}
+
+#boredButton:hover {
+    transform: scale(1.05);
+}
+
+#boredButton:active {
+    transform: scale(.93);
+}
+
+#message {
+    position: absolute;
+    top: 7%;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 2px 5px rgba(0,0,0,.25);
+    padding: 0 20px;
+}
+
+#counter {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+
+    padding: 10px 15px;
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.5);
+    backdrop-filter: blur(10px);
+
+    color: #24516d;
+    font-size: 14px;
+}
+
+/* -------------------------
+   DOOR
+------------------------- */
+
+#door {
+    position: fixed;
+    left: 50%;
+    bottom: 24%;
+    transform: translateX(-50%);
+
+    width: 150px;
+    height: 240px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #372b35,
+            #634956,
+            #342732
+        );
+
+    border: 8px solid #241e25;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.35);
+
+    display: none;
+
+    cursor: pointer;
+    z-index: 8;
+}
+
+#door::after {
+    content: "🚪";
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 65px;
+}
+
+#doorLabel {
+    position: absolute;
+    top: -45px;
+    width: 100%;
+
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+/* -------------------------
+   HALLWAY
+------------------------- */
+
+#hallway {
+    position: fixed;
+    inset: 0;
+    display: none;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            #14141c 0%,
+            #272733 45%,
+            #14141c 100%
+        );
+
+    z-index: 30;
+}
+
+.wall {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 28%;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #24232e 0px,
+            #24232e 40px,
+            #1b1a23 41px,
+            #1b1a23 80px
+        );
+}
+
+.wall.left {
+    left: 0;
+    transform: skewY(-8deg);
+    transform-origin: left;
+}
+
+.wall.right {
+    right: 0;
+    transform: skewY(8deg);
+    transform-origin: right;
+}
+
+.floor {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 38%;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #18171e 0px,
+            #18171e 100px,
+            #24232b 101px,
+            #24232b 105px
+        );
+
+    clip-path: polygon(
+        25% 0,
+        75% 0,
+        100% 100%,
+        0 100%
+    );
+}
+
+.hallLight {
+    position: absolute;
+    width: 60px;
+    height: 120px;
+
+    background: #fff2b3;
+    box-shadow: 0 0 30px #ffe88a;
+
+    top: 15%;
+
+    animation: flicker 3s infinite;
+}
+
+.hallLight:nth-child(1) {
+    left: 35%;
+}
+
+.hallLight:nth-child(2) {
+    right: 35%;
+    animation-delay: 1s;
+}
+
+@keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: .2; }
+    97% { opacity: 1; }
+}
+
+.hallDoor {
+    position: absolute;
+
+    width: 90px;
+    height: 150px;
+
+    background: #6c596d;
+    border: 5px solid #302532;
+
+    cursor: pointer;
+
+    transition: transform .2s;
+}
+
+.hallDoor:hover {
+    transform: scale(1.08);
+}
+
+.hallDoor:nth-of-type(1) {
+    left: 30%;
+    top: 38%;
+}
+
+.hallDoor:nth-of-type(2) {
+    right: 30%;
+    top: 42%;
+}
+
+#exitHall {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    padding: 10px 15px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.15);
+    color: white;
+
+    cursor: pointer;
+}
+
+/* -------------------------
+   RANDOM EVENTS
+------------------------- */
+
+.event {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 50;
+
+    pointer-events: none;
+}
+
+.eventText {
+    font-size: 50px;
+    font-weight: bold;
+    color: white;
+
+    text-shadow:
+        0 0 10px black,
+        0 0 30px black;
+
+    animation: eventAppear 2s forwards;
+}
+
+@keyframes eventAppear {
+    0% {
+        transform: scale(.2) rotate(-20deg);
+        opacity: 0;
+    }
+
+    30% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* -------------------------
+   STARS
+------------------------- */
+
+.star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: white;
+
+    animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+    from { opacity: .2; }
+    to { opacity: 1; }
+}
+
+/* -------------------------
+   MOBILE
+------------------------- */
+
+@media (max-width: 600px) {
+
+    #boredButton {
+        width: 200px;
+        height: 200px;
+        font-size: 25px;
+    }
+
+    #message {
+        font-size: 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="sky">
+
+    <div class="sun"></div>
+    <div class="moon"></div>
+
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+
+</div>
+
+<div id="ground"></div>
+
+<div id="interface">
+
+    <div id="message">
+        You look bored.
+    </div>
+
+    <button id="boredButton">
+        I'M BORED
+    </button>
+
+</div>
+
+<div id="door">
+    <div id="doorLabel">You found a door.</div>
+</div>
+
+<div id="counter">
+    Clicks: 0
+</div>
+
+
+<!-- INFINITE HALLWAY -->
+
+<div id="hallway">
+
+    <div class="wall left"></div>
+    <div class="wall right"></div>
+
+    <div class="floor"></div>
+
+    <div class="hallLight"></div>
+    <div class="hallLight"></div>
+
+    <div
+        class="hallDoor"
+        onclick="hallDoor()"
+    ></div>
+
+    <div
+        class="hallDoor"
+        onclick="hallDoor()"
+    ></div>
+
+    <button id="exitHall">
+        ← Leave hallway
+    </button>
+
+</div>
+
+
+<script>
+
+let clicks = 0;
+
+const button = document.getElementById("boredButton");
+const message = document.getElementById("message");
+const counter = document.getElementById("counter");
+const door = document.getElementById("door");
+const hallway = document.getElementById("hallway");
+
+const messages = [
+
+    "That didn't help.",
+    "Still bored?",
+    "Interesting.",
+    "You shouldn't have clicked that.",
+    "Something changed.",
+    "Look around.",
+    "Was that always there?",
+    "You found something.",
+    "Keep clicking.",
+    "The website is getting concerned.",
+    "I don't know what you expected.",
+    "Congratulations. You clicked a button.",
+    "This is probably fine.",
+    "Have you tried clicking again?",
+    "The universe noticed that.",
+    "You are going deeper.",
+    "Something is watching.",
+    "Wrong button.",
+    "There is no button.",
+    "Actually, there is."
+];
+
+button.addEventListener("click", bored);
+
+function bored() {
+
+    clicks++;
+
+    counter.textContent = "Clicks: " + clicks;
+
+    message.textContent =
+        messages[Math.floor(Math.random() * messages.length)];
+
+    let event = Math.floor(Math.random() * 12);
+
+    if (event === 0) {
+        skyNight();
+    }
+
+    else if (event === 1) {
+        skyStorm();
+    }
+
+    else if (event === 2) {
+        createStars();
+    }
+
+    else if (event === 3) {
+        spawnDoor();
+    }
+
+    else if (event === 4) {
+        earthquake();
+    }
+
+    else if (event === 5) {
+        moonMode();
+    }
+
+    else if (event === 6) {
+        rainbow();
+    }
+
+    else if (event === 7) {
+        matrixMode();
+    }
+
+    else if (event === 8) {
+        giantText();
+    }
+
+    else if (event === 9) {
+        hallway.style.display = "block";
+        message.textContent = "There is a hallway now.";
+    }
+
+    else {
+        randomEvent();
+    }
+
+}
+
+
+/* -------------------------
+   TIME-BASED SKY
+------------------------- */
+
+function updateSky() {
+
+    let hour = new Date().getHours();
+
+    const sun = document.querySelector(".sun");
+    const moon = document.querySelector(".moon");
+
+    if (hour >= 7 && hour < 18) {
+
+        document.body.style.background =
+            "linear-gradient(to bottom,#78c9ff,#b9e6ff,#eaf8ff)";
+
+        sun.style.display = "block";
+        moon.style.display = "none";
+
+    }
+
+    else {
+
+        document.body.style.background =
+            "linear-gradient(to bottom,#101936,#27345d,#52637c)";
+
+        sun.style.display = "none";
+        moon.style.display = "block";
+
+        createStars();
+
+    }
+
+}
+
+updateSky();
+
+
+/* -------------------------
+   NIGHT
+------------------------- */
+
+function skyNight() {
+
+    document.body.style.background =
+        "linear-gradient(to bottom,#090d24,#19244d,#34436c)";
+
+    document.querySelector(".sun").style.display = "none";
+    document.querySelector(".moon").style.display = "block";
+
+    createStars();
+
+    message.textContent = "Night has arrived.";
+}
+
+
+/* -------------------------
+   STORM
+------------------------- */
+
+function skyStorm() {
+
+    document.body.style.background =
+        "linear-gradient(to bottom,#31343c,#555861,#25272c)";
+
+    message.textContent = "A storm is coming.";
+
+    for (let i = 0; i < 15; i++) {
+
+        setTimeout(() => {
+
+            document.body.style.filter =
+                "brightness(2)";
+
+            setTimeout(() => {
+                document.body.style.filter =
+                    "brightness(1)";
+            }, 100);
+
+        }, i * 300);
+
+    }
+
+}
+
+
+/* -------------------------
+   STARS
+------------------------- */
+
+function createStars() {
+
+    for (let i = 0; i < 80; i++) {
+
+        let star = document.createElement("div");
+
+        star.className = "star";
+
+        star.style.left =
+            Math.random() * 100 + "%";
+
+        star.style.top =
+            Math.random() * 70 + "%";
+
+        star.style.animationDelay =
+            Math.random() * 2 + "s";
+
+        document.getElementById("sky")
+            .appendChild(star);
+
+    }
+
+}
+
+
+/* -------------------------
+   DOOR
+------------------------- */
+
+function spawnDoor() {
+
+    door.style.display = "block";
+
+    message.textContent =
+        "There is definitely a door now.";
+
+    setTimeout(() => {
+
+        if (Math.random() < .5) {
+            door.style.display = "none";
+        }
+
+    }, 6000);
+
+}
+
+door.addEventListener("click", () => {
+
+    hallway.style.display = "block";
+
+});
+
+
+/* -------------------------
+   HALLWAY
+------------------------- */
+
+function hallDoor() {
+
+    let result =
+        Math.floor(Math.random() * 5);
+
+    if (result === 0) {
+
+        hallway.style.background =
+            "linear-gradient(90deg,#210000,#650000,#210000)";
+
+        alert("This door goes somewhere warm.");
+
+    }
+
+    else if (result === 1) {
+
+        hallway.style.background =
+            "linear-gradient(90deg,#001b21,#00606c,#001b21)";
+
+        alert("You hear water.");
+
+    }
+
+    else if (result === 2) {
+
+        hallway.style.background =
+            "linear-gradient(90deg,#180021,#5e0073,#180021)";
+
+        alert("There are stars behind this door.");
+
+    }
+
+    else if (result === 3) {
+
+        hallway.style.background =
+            "linear-gradient(90deg,#202000,#777700,#202000)";
+
+        alert("Everything is yellow.");
+
+    }
+
+    else {
+
+        hallway.style.background =
+            "linear-gradient(90deg,#111,#555,#111)";
+
+        alert("It's another hallway.");
+
+    }
+
+}
+
+
+/* -------------------------
+   EXIT
+------------------------- */
+
+document.getElementById("exitHall")
+    .onclick = function() {
+
+        hallway.style.display = "none";
+
+    };
+
+
+/* -------------------------
+   EARTHQUAKE
+------------------------- */
+
+function earthquake() {
+
+    document.body.animate(
+        [
+            { transform: "translate(0,0)" },
+            { transform: "translate(10px,-5px)" },
+            { transform: "translate(-10px,5px)" },
+            { transform: "translate(8px,2px)" },
+            { transform: "translate(0,0)" }
+        ],
+        {
+            duration: 500
+        }
+    );
+
+}
+
+
+/* -------------------------
+   MOON MODE
+------------------------- */
+
+function moonMode() {
+
+    skyNight();
+
+    message.textContent =
+        "The moon is watching.";
+
+}
+
+
+/* -------------------------
+   RAINBOW
+------------------------- */
+
+function rainbow() {
+
+    document.body.style.background =
+        "linear-gradient(135deg,red,orange,yellow,green,cyan,blue,purple)";
+
+    message.textContent =
+        "🌈 RAINBOW MODE 🌈";
+
+}
+
+
+/* -------------------------
+   MATRIX
+------------------------- */
+
+function matrixMode() {
+
+    document.body.style.background =
+        "#001100";
+
+    message.style.color =
+        "#00ff55";
+
+    message.textContent =
+        "THE WEBSITE HAS BECOME SENTIENT.";
+
+    setTimeout(() => {
+
+        message.style.color = "white";
+
+    }, 4000);
+
+}
+
+
+/* -------------------------
+   GIANT TEXT
+------------------------- */
+
+function giantText() {
+
+    let text = document.createElement("div");
+
+    text.className = "event";
+
+    text.innerHTML =
+        '<div class="eventText">WHY ARE YOU STILL HERE?</div>';
+
+    document.body.appendChild(text);
+
+    setTimeout(() => {
+        text.remove();
+    }, 2000);
+
+}
+
+
+/* -------------------------
+   RANDOM EVENT
+------------------------- */
+
+function randomEvent() {
+
+    let phrases = [
+
+        "🌎",
+        "404",
+        "BOOM",
+        "hello",
+        "???",
+        "🚪",
+        "🌙",
+        "🌌",
+        "RUN",
+        "nice.",
+        "wow",
+        "okay",
+
+    ];
+
+    let text = document.createElement("div");
+
+    text.className = "event";
+
+    text.innerHTML =
+        '<div class="eventText">' +
+        phrases[Math.floor(Math.random() * phrases.length)] +
+        '</div>';
+
+    document.body.appendChild(text);
+
+    setTimeout(() => {
+        text.remove();
+    }, 2000);
+
+}
+
+
+/* -------------------------
+   RARE SECRET
+------------------------- */
+
+setInterval(() => {
+
+    if (clicks > 5 && Math.random() < .08) {
+
+        message.textContent =
+            "You found the secret event.";
+
+        document.body.style.transform =
+            "rotate(180deg)";
+
+        setTimeout(() => {
+
+            document.body.style.transform =
+                "rotate(0deg)";
+
+        }, 1000);
+
+    }
+
+}, 3000);
+
+</script>
+
+</body>
+</html>
+```
